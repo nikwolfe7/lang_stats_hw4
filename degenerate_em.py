@@ -4,7 +4,7 @@ import numpy
 model_a = "mystery_A.fprobs.txt"
 model_b = "mystery_B.fprobs.txt"
 model_c = "mystery_C.fprobs.txt"
-convergence_difference = 0.0001
+convergence_difference = 0.00001
 
 def initialize_lambda_weights(lang_models):
 	lambda_weights = [random.uniform(0,1) for _ in range(len(lang_models))]
@@ -37,12 +37,10 @@ def e_step(lang_models, lambda_weights, K, N):
 	for j in range(len(lambda_weights)):
 		update = 0.0
 		for i in range(N):
-			# add because these are logs...
 			numerator = lang_models[j][i] * lambda_weights[j]
 			#numerator = lang_models[j][i] + lambda_weights[j] 
 			denominator = 0.0
 			for k in range(K):
-				# add because these are logs...
 				denominator = denominator + (lambda_weights[k] * lang_models[k][i])
 				#denominator = log_sum(denominator, (lambda_weights[k] + lang_models[k][i]))
 			update = update + (numerator / denominator)
@@ -73,15 +71,17 @@ def convergence_test(L_t, L_t_plus_one):
 def run_em(models):
 	lang_models = []
 	N = 0
-	for i, model in enumerate(models):
-		N = len(model)
+	for model in models:
+		i = models.index(model)
 		lang_models.append([float(x) for x in open(model).readlines()])
+		N = len(lang_models[-1])
 		print("Length of model " + str(i+1) + ": " + str(N) + " and values sum to: " + \
 			str(sum(lang_models[i])))
 	
 	
-	lambda_weights = initialize_lambda_weights(lang_models)
-	#lambda_weights = [1.0/3, 1.0/3, 1.0/3]
+	#lambda_weights = initialize_lambda_weights(lang_models)
+	lambda_weights = [1.0/3, 1.0/3, 1.0/3]
+	print("Initial lambda weights: " + str(lambda_weights))
 	iteration = 1
 	K = len(lambda_weights)
 	print("N is " + str(N))
