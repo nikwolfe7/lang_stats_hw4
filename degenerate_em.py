@@ -4,6 +4,12 @@ import numpy
 model_a = "mystery_A.fprobs.txt"
 model_b = "mystery_B.fprobs.txt"
 model_c = "mystery_C.fprobs.txt"
+#model_a = "random_vals_0.txt"
+#model_b = "random_vals_1.txt"
+#model_c = "random_vals_2.txt"
+#model_d = "random_vals_3.txt"
+#model_e = "random_vals_4.txt"
+
 convergence_difference = 0.00001
 
 def initialize_lambda_weights(lang_models):
@@ -65,10 +71,13 @@ def m_step(lang_models, lambda_weights, K, N):
 def convergence_test(L_t, L_t_plus_one):
 	ratio = (L_t_plus_one - L_t)/numpy.abs(L_t_plus_one)
 	print("Difference: " + str(ratio))
-	return ratio <= convergence_difference
+	return numpy.abs(ratio) <= convergence_difference
 	
 
 def run_em(models):
+	#import gen_data
+	#gen_data.generate_data()
+	
 	lang_models = []
 	N = 0
 	for model in models:
@@ -79,8 +88,9 @@ def run_em(models):
 			str(sum(lang_models[i])))
 	
 	
-	#lambda_weights = initialize_lambda_weights(lang_models)
-	lambda_weights = [1.0/3, 1.0/3, 1.0/3]
+	lambda_weights = initialize_lambda_weights(lang_models)
+	#lambda_weights = [1.0/3, 1.0/3, 1.0/3]
+	#lambda_weights = [0.05,0.05,0.05,0.50,0.35]
 	print("Initial lambda weights: " + str(lambda_weights))
 	iteration = 1
 	K = len(lambda_weights)
@@ -89,9 +99,9 @@ def run_em(models):
 	
 	#print("Logifying...")
 	#lambda_weights = logify(lambda_weights)
-	for model in lang_models:
-		# model = logify(model)
-		print("Model " + str(lang_models.index(model)) + ": " + str(model))
+	#for model in lang_models:
+	# 	model = logify(model)
+	#	print("Model " + str(lang_models.index(model)) + ": " + str(model))
 		
 	
 	# ------------------------------------- #
