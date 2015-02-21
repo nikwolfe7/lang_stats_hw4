@@ -4,19 +4,40 @@ import numpy
 model_a = "mystery_A.fprobs.txt"
 model_b = "mystery_B.fprobs.txt"
 model_c = "mystery_C.fprobs.txt"
+model_d = "uniform_model.txt"
+# ------------------------- #
 #model_a = "random_vals_0.txt"
 #model_b = "random_vals_1.txt"
 #model_c = "random_vals_2.txt"
 #model_d = "random_vals_3.txt"
 #model_e = "random_vals_4.txt"
 
-convergence_difference = 0.00001
+convergence_difference = 0.001
+
+def generate_data():
+	print("Generating data...") 
+	for x in range(5):
+		name = "random_vals_" + str(x) + ".txt"
+		f = open(name,"w")
+		if x is 1:
+			for _ in range(100000): f.write()
+		else:
+			for _ in range(100000):
+				f.write(str(random.uniform(0,1)) + "\n")
+			f.close()
+		print(name)
+		
+def generate_uniform(V):
+	prob = 1.0/V
+	f = open("uniform_model.txt","w")
+	for _ in range(17354):
+		f.write(str(prob)+"\n")
+	f.close()
 
 def initialize_lambda_weights(lang_models):
 	lambda_weights = [random.uniform(0,1) for _ in range(len(lang_models))]
 	lambda_weights = normalize_weights(lambda_weights)
 	print("Initializing lambdas: Weights sum to " + str(sum(lambda_weights)))
-	print(lambda_weights)
 	return lambda_weights
 
 def normalize_weights(weights):
@@ -25,7 +46,7 @@ def normalize_weights(weights):
 
 def logify(stuff):
 	for i in range(len(stuff)):
-		if(stuff[i] == 0): stuff[i] = numpy.log(0.0000000000001)
+		if(stuff[i] == 0): stuff[i] = numpy.log(1e-10)
 		else: stuff[i] = numpy.log(float(stuff[i]))
 	return stuff
 
@@ -75,8 +96,8 @@ def convergence_test(L_t, L_t_plus_one):
 	
 
 def run_em(models):
-	#import gen_data
-	#gen_data.generate_data()
+	#generate_data()
+	generate_uniform(8000)
 	
 	lang_models = []
 	N = 0
@@ -90,7 +111,8 @@ def run_em(models):
 	
 	lambda_weights = initialize_lambda_weights(lang_models)
 	#lambda_weights = [1.0/3, 1.0/3, 1.0/3]
-	#lambda_weights = [0.05,0.05,0.05,0.50,0.35]
+	#lambda_weights = [0.6,0.3,0.1]
+	#lambda_weights = [0.05,0.05,0.05,0.40,0.09]
 	print("Initial lambda weights: " + str(lambda_weights))
 	iteration = 1
 	K = len(lambda_weights)
@@ -131,4 +153,5 @@ def run_em(models):
 	
 
 if __name__ == '__main__':
-	run_em((model_a,model_b,model_c))
+	#run_em((model_a,model_b,model_c,model_d,model_e))
+	run_em((model_a,model_c,model_c))
