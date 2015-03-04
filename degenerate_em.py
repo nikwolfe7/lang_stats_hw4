@@ -12,7 +12,7 @@ model_d = "uniform_model.txt"
 #model_d = "random_vals_3.txt"
 #model_e = "random_vals_4.txt"
 
-convergence_difference = 0.001
+convergence_difference = 0.0000001
 
 def generate_data():
 	print("Generating data...") 
@@ -109,9 +109,9 @@ def run_em(models):
 			str(sum(lang_models[i])))
 	
 	
-	lambda_weights = initialize_lambda_weights(lang_models)
+	#lambda_weights = initialize_lambda_weights(lang_models)
 	#lambda_weights = [1.0/3, 1.0/3, 1.0/3]
-	#lambda_weights = [0.6,0.3,0.1]
+	lambda_weights = [0.6,0.3,0.1]
 	#lambda_weights = [0.05,0.05,0.05,0.40,0.09]
 	print("Initial lambda weights: " + str(lambda_weights))
 	iteration = 1
